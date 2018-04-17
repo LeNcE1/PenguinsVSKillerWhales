@@ -1,9 +1,9 @@
 package com.lence.penguinsvskillerwhales.model;
 
 public class Orca implements Organism {
-    Boolean moved = false;
-    int hunger = 0;
-    int age = 0;
+    private Boolean moved = false;
+    private int hunger = 0;
+    private int age = 0;
 
     public int getHunger() {
         return hunger;

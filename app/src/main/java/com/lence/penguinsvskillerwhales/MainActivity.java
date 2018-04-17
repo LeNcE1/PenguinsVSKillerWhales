@@ -23,11 +23,10 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     RecyclerView mTable;
     @BindView(R.id.restart)
     Button mRestart;
-
-    Adapter mAdapter;
-    Presenter mPresenter;
     @BindView(R.id.click)
     FrameLayout mClick;
+    Adapter mAdapter;
+    Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,32 +35,13 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         ButterKnife.bind(this);
 
-
         mPresenter = new Presenter(ROWS, COLUMNS, this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, COLUMNS);
         mTable.setLayoutManager(mLayoutManager);
         mTable.setNestedScrollingEnabled(false);
-        // mTable.setItemAnimator(new DefaultItemAnimator());
         mPresenter.primaryState();
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    //    @OnTouch(R.id.lists)
-//    public boolean onMListsClicked() {
-//        mPresenter.nextStep();
-//        return true;
-//    }
-
 
     @OnClick(R.id.restart)
     public void onMRestartClicked() {
@@ -79,5 +59,30 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     @OnClick(R.id.click)
     public void onViewClicked() {
         mPresenter.nextStep();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

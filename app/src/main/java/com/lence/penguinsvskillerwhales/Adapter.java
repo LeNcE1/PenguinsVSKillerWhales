@@ -28,9 +28,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private int mRows;
     private int mColumns;
     int height;
-    int width;
 
-    public Adapter(LinkedList<Object> lists, Context context, int rows, int columns) {
+    Adapter(LinkedList<Object> lists, Context context, int rows, int columns) {
         mLists = lists;
         mContext = context;
         mRows = rows;
@@ -42,13 +41,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-
-        //height = parent.getMeasuredHeight() / mRows;
-        //Log.e("height",height+"");
         android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, parent.getMeasuredHeight() / mRows);
-        //width= ViewGroup.LayoutParams.MATCH_PARENT;
         itemView.setLayoutParams(layoutParams);
-        //itemView.setMinimumHeight(height);
         return new ViewHolder(itemView);
     }
 
@@ -57,7 +51,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         if (mLists.get(position) instanceof Penguin)
             Picasso.with(mContext)
                     .load(R.drawable.tux)
-                    //.resize(30, height)
                     .into(holder.mItem);
         if (mLists.get(position) instanceof Orca)
             Picasso.with(mContext)
@@ -78,7 +71,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         @BindView(R.id.item)
         ImageView mItem;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

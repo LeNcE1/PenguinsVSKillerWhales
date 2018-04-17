@@ -1,8 +1,8 @@
 package com.lence.penguinsvskillerwhales.model;
 
 public class Penguin implements Organism {
-    Boolean moved = false;
-    int age = 0;
+    private Boolean moved = false;
+    private int age = 0;
 
     public void addAge() {
         if (age < 3) {

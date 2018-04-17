@@ -56,79 +56,44 @@ public class Presenter {
             mLists.set(nextPosition, new Orca());
         }
 
-//        mLists.set(0, new Penguin());
-//        mLists.set(1, new Penguin());
-//            mLists.set(10, new Orca());
-//        mLists.set(11, new Penguin());
-//        mLists.set(33, new Orca());
-//        mLists.set(44, new Penguin());
-//        mLists.set(55, new Penguin());
-//        mLists.set(66, new Penguin());
-//        mLists.set(27, new Orca());
-//        mLists.set(18, new Penguin());
-//        mLists.set(98, new Penguin());
-//        mLists.set(108, new Penguin());
-//        mLists.set(118, new Penguin());
-//        mLists.set(128, new Penguin());
-//        mLists.set(138, new Penguin());
         mUpdateAdapter.updateAdapter(mLists);
     }
 
 
     public void nextStep() {
         for (int position = 0; position < mLists.size(); position++) {
+            //type check
             if (!(mLists.get(position) instanceof Boolean)) {
-
+                //penguin life cycle
                 if (mLists.get(position) instanceof Penguin) {
-                    Log.e("lifeCycle", "Penguin " + position);
                     Penguin penguin = (Penguin) mLists.get(position);
                     if (!penguin.isMoved()) {
-                        Log.e("lifeCycle", "isMoved " + position);
                         if (penguin.getAge() == 2) {
-                            Log.e("lifeCycle", "getAge " + position);
-                            //1
                             breeding(position, new Penguin());
-                            Log.e("lifeCycle", "breeding " + position);
                         }
-                        Log.e("lifeCycle", "premove " + position);
                         move(position);
-                        Log.e("lifeCycle", "postmove " + position);
                         penguin.addAge();
-                        Log.e("lifeCycle", "addAge " + position);
                         penguin.setMoved(true);
-                        Log.e("lifeCycle", "setMoved " + position);
                     }
                 }
+                //orca life cycle
                 if (mLists.get(position) instanceof Orca) {
-                    Log.e("lifeCycle", "Orca " + position);
                     Orca orca = (Orca) mLists.get(position);
                     if (!orca.isMoved()) {
-                        Log.e("lifeCycle", "isMoved " + position);
                         if (orca.getHunger() < 2) {
-                            Log.e("lifeCycle", "getHunger " + position);
                             if (orca.getAge() == 7) {
-                                Log.e("lifeCycle", "getAge " + position);
                                 breeding(position, new Orca());
-                                Log.e("lifeCycle", "breeding " + position);
                             }
                             if (eat(position)) {
-                                Log.e("lifeCycle", "eat " + position);
                                 orca.eat();
-                                Log.e("lifeCycle", "finaleat " + position);
                             } else {
-                                Log.e("lifeCycle", "premove " + position);
                                 move(position);
-                                Log.e("lifeCycle", "postmove " + position);
                                 orca.addHunger();
-                                Log.e("lifeCycle", "addHunger " + position);
                             }
                             orca.addAge();
-                            Log.e("lifeCycle", "addAge " + position);
                             orca.setMoved(true);
-                            Log.e("lifeCycle", "setMoved " + position);
                         } else {
                             mLists.set(position, false);
-                            Log.e("lifeCycle", "death " + position);
                         }
                     }
 
@@ -136,6 +101,7 @@ public class Presenter {
 
             }
         }
+        //preparation for the next step
         for (int position = 0; position < mLists.size(); position++) {
             if (!(mLists.get(position) instanceof Boolean)) {
 
@@ -155,14 +121,11 @@ public class Presenter {
             }
         }
         mUpdateAdapter.updateAdapter(mLists);
-        // Log.e("move", "move ");
     }
 
 
     private void move(int thisPosition) {
-        // Log.e("move", "move "+thisPosition);
         switch (mRandom.nextInt(7)) {
-            //switch (7) {
             case 0: {
                 //left
                 if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Boolean)) {
@@ -250,6 +213,7 @@ public class Presenter {
 
     private void breeding(int thisPosition, Organism organism) {
         ArrayList<Integer> checkList = new ArrayList<>();
+        //free directions list
         if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Boolean)) {
             checkList.add(0);
         }
@@ -282,8 +246,7 @@ public class Presenter {
             } else {
                 randomNumber = mRandom.nextInt(checkList.size() - 1);
             }
-
-            Log.e("breeding", "breeding" + thisPosition + " " + randomNumber);
+            //creation of a new organism
             switch (checkList.get(randomNumber)) {
                 case 0: {
                     mLists.set(thisPosition - 1, organism);
@@ -322,6 +285,7 @@ public class Presenter {
     }
 
     private boolean eat(int thisPosition) {
+        //verification of all directions
         if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Penguin)) {
             mLists.set(thisPosition - 1, mLists.get(thisPosition));
             mLists.set(thisPosition, false);
@@ -362,7 +326,6 @@ public class Presenter {
             mLists.set(thisPosition, false);
             return true;
         }
-
 
         return false;
     }
