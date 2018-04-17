@@ -6,6 +6,7 @@ import com.lence.penguinsvskillerwhales.model.Orca;
 import com.lence.penguinsvskillerwhales.model.Organism;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -24,7 +25,7 @@ public class Presenter {
         mUpdateAdapter = updateAdapter;
     }
 
-//initial condition - 50% of penguins, 5% of orcas
+    //initial condition - 50% of penguins, 5% of orcas
     void primaryState() {
         mLists = new LinkedList<>();
         for (int i = 0; i < mRows * mColumns; i++) {
@@ -39,7 +40,7 @@ public class Presenter {
             mLists.set(nextPosition, new Penguin());
         }
         //if table is small then add 1 orcas
-        if (mRows * mColumns/20>0){
+        if (mRows * mColumns / 20 > 0) {
             for (int i = 0; i < (mRows * mColumns) / 20; i++) {
                 int nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
                 while (!(mLists.get(nextPosition) instanceof Boolean)) {
@@ -47,8 +48,7 @@ public class Presenter {
                 }
                 mLists.set(nextPosition, new Orca());
             }
-        }
-        else {
+        } else {
             int nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
             while (!(mLists.get(nextPosition) instanceof Boolean)) {
                 nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
@@ -249,44 +249,42 @@ public class Presenter {
     }
 
     private void breeding(int thisPosition, Organism organism) {
-        int[] checkList = {0, 0, 0, 0, 0, 0, 0, 0};
-        int countVariant = 0;
+        ArrayList<Integer> checkList = new ArrayList<>();
         if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Boolean)) {
-            checkList[0] = 1;
+            checkList.add(0);
         }
         if (((thisPosition + 1) % mColumns != 0) && (mLists.get(thisPosition + 1) instanceof Boolean)) {
-            checkList[1] = 1;
+            checkList.add(1);
         }
         if (((thisPosition - mColumns) >= 0) && (mLists.get(thisPosition - mColumns) instanceof Boolean)) {
-            checkList[2] = 1;
+            checkList.add(2);
         }
         if (((thisPosition + mColumns) < mColumns * mRows) && (mLists.get(thisPosition + mColumns) instanceof Boolean)) {
-            checkList[3] = 1;
+            checkList.add(3);
         }
         if (((thisPosition - mColumns) - 1 >= 0) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition - mColumns) - 1) instanceof Boolean)) {
-            checkList[4] = 1;
+            checkList.add(4);
         }
         if (((thisPosition - mColumns) + 1 >= 0) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition - mColumns) + 1) instanceof Boolean)) {
-            checkList[5] = 1;
+            checkList.add(5);
         }
         if (((thisPosition + mColumns) - 1 < mColumns * mRows) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition + mColumns) - 1) instanceof Boolean)) {
-            checkList[6] = 1;
+            checkList.add(6);
         }
         if (((thisPosition + mColumns) + 1 < mColumns * mRows) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition + mColumns) + 1) instanceof Boolean)) {
-            checkList[7] = 1;
+            checkList.add(7);
         }
-        for (int variant = 0; variant < 8; variant++) {
-            if (checkList[variant] == 1) {
-                countVariant++;
+
+        if (checkList.size() > 0) {
+            int randomNumber;
+            if (checkList.size() == 1) {
+                randomNumber = 0;
+            } else {
+                randomNumber = mRandom.nextInt(checkList.size() - 1);
             }
-        }
-        if (countVariant > 0) {
-            int randomNumber = mRandom.nextInt(7);
-            while (checkList[randomNumber] == 0) {
-                randomNumber = mRandom.nextInt(7);
-            }
+
             Log.e("breeding", "breeding" + thisPosition + " " + randomNumber);
-            switch (randomNumber) {
+            switch (checkList.get(randomNumber)) {
                 case 0: {
                     mLists.set(thisPosition - 1, organism);
                     break;
