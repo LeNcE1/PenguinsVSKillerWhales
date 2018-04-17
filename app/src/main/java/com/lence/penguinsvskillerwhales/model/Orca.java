@@ -1,7 +1,9 @@
 package com.lence.penguinsvskillerwhales.model;
 
-public class Orca extends Organism {
-    int hunger=0;
+public class Orca implements Organism {
+    Boolean moved = false;
+    int hunger = 0;
+    int age = 0;
 
     public int getHunger() {
         return hunger;
@@ -11,8 +13,8 @@ public class Orca extends Organism {
         hunger++;
     }
 
-    public void eat(){
-        hunger=0;
+    public void eat() {
+        hunger = 0;
     }
 
     public void addAge() {
@@ -23,4 +25,17 @@ public class Orca extends Organism {
         }
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public Boolean isMoved() {
+        return moved;
+    }
+
+    @Override
+    public void setMoved(Boolean moved) {
+        this.moved = moved;
+    }
 }

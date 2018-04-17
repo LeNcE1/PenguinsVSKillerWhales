@@ -46,8 +46,17 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
         mPresenter.primaryState();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
-//    @OnTouch(R.id.lists)
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    //    @OnTouch(R.id.lists)
 //    public boolean onMListsClicked() {
 //        mPresenter.nextStep();
 //        return true;

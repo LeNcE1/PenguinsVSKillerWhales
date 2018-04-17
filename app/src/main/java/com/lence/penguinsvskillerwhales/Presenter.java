@@ -80,36 +80,55 @@ public class Presenter {
             if (!(mLists.get(position) instanceof Boolean)) {
 
                 if (mLists.get(position) instanceof Penguin) {
+                    Log.e("lifeCycle", "Penguin " + position);
                     Penguin penguin = (Penguin) mLists.get(position);
                     if (!penguin.isMoved()) {
+                        Log.e("lifeCycle", "isMoved " + position);
                         if (penguin.getAge() == 2) {
+                            Log.e("lifeCycle", "getAge " + position);
+                            //1
                             breeding(position, new Penguin());
                             Log.e("lifeCycle", "breeding " + position);
                         }
-                        Log.e("lifeCycle", "move " + position);
+                        Log.e("lifeCycle", "premove " + position);
                         move(position);
-
+                        Log.e("lifeCycle", "postmove " + position);
                         penguin.addAge();
+                        Log.e("lifeCycle", "addAge " + position);
                         penguin.setMoved(true);
+                        Log.e("lifeCycle", "setMoved " + position);
                     }
                 }
                 if (mLists.get(position) instanceof Orca) {
+                    Log.e("lifeCycle", "Orca " + position);
                     Orca orca = (Orca) mLists.get(position);
                     if (!orca.isMoved()) {
+                        Log.e("lifeCycle", "isMoved " + position);
                         if (orca.getHunger() < 2) {
+                            Log.e("lifeCycle", "getHunger " + position);
                             if (orca.getAge() == 7) {
+                                Log.e("lifeCycle", "getAge " + position);
                                 breeding(position, new Orca());
+                                Log.e("lifeCycle", "breeding " + position);
                             }
                             if (eat(position)) {
+                                Log.e("lifeCycle", "eat " + position);
                                 orca.eat();
+                                Log.e("lifeCycle", "finaleat " + position);
                             } else {
+                                Log.e("lifeCycle", "premove " + position);
                                 move(position);
+                                Log.e("lifeCycle", "postmove " + position);
                                 orca.addHunger();
+                                Log.e("lifeCycle", "addHunger " + position);
                             }
                             orca.addAge();
+                            Log.e("lifeCycle", "addAge " + position);
                             orca.setMoved(true);
+                            Log.e("lifeCycle", "setMoved " + position);
                         } else {
                             mLists.set(position, false);
+                            Log.e("lifeCycle", "death " + position);
                         }
                     }
 
