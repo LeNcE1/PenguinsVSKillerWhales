@@ -31,96 +31,105 @@ public class Presenter {
     //initial condition - 50% of penguins, 5% of orcas
     void primaryState() {
         mLists = new LinkedList<>();
-        for (int i = 0; i < mRows * mColumns; i++) {
-
-            mLists.add(false);
-        }
-        Set<Integer> generated = new HashSet<>();
-        int generatedCount = (mRows * mColumns) / 2;
-        if (mRows * mColumns / 20 > 0) {
-            generatedCount += mRows * mColumns / 20;
+        if (mRows * mColumns <= 1) {
+            mLists.add(new Penguin());
+        } else if (mRows * mColumns == 2) {
+            mLists.add(new Penguin());
+            mLists.add(new Orca());
         } else {
-            //if table is small then add 1 orcas
-            generatedCount += 1;
-        }
-        while (generated.size() < generatedCount) {
-            generated.add(mRandom.nextInt((mRows * mColumns) - 1));
-        }
-        Iterator<Integer> iterator = generated.iterator();
-        int generatedIndex = 0;
-        for (; generatedIndex < (mRows * mColumns) / 2; generatedIndex++) {
+            for (int i = 0; i < mRows * mColumns; i++) {
 
-            mLists.set(iterator.next(), new Penguin());
-        }
-        for (; generatedIndex < generatedCount; generatedIndex++) {
-            mLists.set(iterator.next(), new Orca());
-        }
+                mLists.add(false);
+            }
+            Set<Integer> generated = new HashSet<>();
+            int generatedCount = (mRows * mColumns) / 2;
+            if (mRows * mColumns / 20 > 0) {
+                generatedCount += mRows * mColumns / 20;
+            } else {
+                //if table is small then add 1 orcas
+                generatedCount += 1;
+            }
+            while (generated.size() < generatedCount) {
+                generated.add(mRandom.nextInt((mRows * mColumns) - 1));
+            }
+            Iterator<Integer> iterator = generated.iterator();
+            int generatedIndex = 0;
+            for (; generatedIndex < (mRows * mColumns) / 2; generatedIndex++) {
 
+                mLists.set(iterator.next(), new Penguin());
+            }
+            for (; generatedIndex < generatedCount; generatedIndex++) {
+                mLists.set(iterator.next(), new Orca());
+            }
+        }
+        Log.e("listSize", mLists.size() + "");
         mUpdateAdapter.updateAdapter(mLists);
     }
 
 
     public void nextStep() {
-        for (int position = 0; position < mLists.size(); position++) {
-            //type check
-            if (!(mLists.get(position) instanceof Boolean)) {
-                //penguin life cycle
-                if (mLists.get(position) instanceof Penguin) {
-                    Penguin penguin = (Penguin) mLists.get(position);
-                    if (!penguin.isMoved()) {
-                        if (penguin.getAge() == 2) {
-                            breeding(position, new Penguin());
-                        }
-                        move(position);
-                        penguin.addAge();
-                        penguin.setMoved(true);
-                    }
-                }
-                //orca life cycle
-                if (mLists.get(position) instanceof Orca) {
-                    Orca orca = (Orca) mLists.get(position);
-                    if (!orca.isMoved()) {
-                        if (orca.getHunger() < 2) {
-                            if (orca.getAge() == 7) {
-                                breeding(position, new Orca());
+        if (mRows * mColumns > 1) {
+            for (int position = 0; position < mLists.size(); position++) {
+                //type check
+                if (!(mLists.get(position) instanceof Boolean)) {
+                    //penguin life cycle
+                    if (mLists.get(position) instanceof Penguin) {
+                        Penguin penguin = (Penguin) mLists.get(position);
+                        if (!penguin.isMoved()) {
+                            if (penguin.getAge() == 2) {
+                                breeding(position, new Penguin());
                             }
-                            if (eat(position)) {
-                                orca.eat();
+                            move(position);
+                            penguin.addAge();
+                            penguin.setMoved(true);
+                        }
+                    }
+                    //orca life cycle
+                    if (mLists.get(position) instanceof Orca) {
+                        Orca orca = (Orca) mLists.get(position);
+                        if (!orca.isMoved()) {
+                            if (orca.getHunger() < 2) {
+                                if (orca.getAge() == 7) {
+                                    breeding(position, new Orca());
+                                }
+                                if (eat(position)) {
+                                    orca.eat();
+                                } else {
+                                    move(position);
+                                    orca.addHunger();
+                                }
+                                orca.addAge();
+                                orca.setMoved(true);
                             } else {
-                                move(position);
-                                orca.addHunger();
+                                mLists.set(position, false);
                             }
-                            orca.addAge();
-                            orca.setMoved(true);
-                        } else {
-                            mLists.set(position, false);
+                        }
+
+                    }
+
+                }
+            }
+            //preparation for the next step
+            for (int position = 0; position < mLists.size(); position++) {
+                if (!(mLists.get(position) instanceof Boolean)) {
+
+                    if (mLists.get(position) instanceof Penguin) {
+                        Penguin penguin = (Penguin) mLists.get(position);
+                        if (penguin.isMoved()) {
+                            penguin.setMoved(false);
+                        }
+                    }
+                    if (mLists.get(position) instanceof Orca) {
+                        Orca orca = (Orca) mLists.get(position);
+                        if (orca.isMoved()) {
+                            orca.setMoved(false);
                         }
                     }
 
                 }
-
             }
+            mUpdateAdapter.updateAdapter(mLists);
         }
-        //preparation for the next step
-        for (int position = 0; position < mLists.size(); position++) {
-            if (!(mLists.get(position) instanceof Boolean)) {
-
-                if (mLists.get(position) instanceof Penguin) {
-                    Penguin penguin = (Penguin) mLists.get(position);
-                    if (penguin.isMoved()) {
-                        penguin.setMoved(false);
-                    }
-                }
-                if (mLists.get(position) instanceof Orca) {
-                    Orca orca = (Orca) mLists.get(position);
-                    if (orca.isMoved()) {
-                        orca.setMoved(false);
-                    }
-                }
-
-            }
-        }
-        mUpdateAdapter.updateAdapter(mLists);
     }
 
 
