@@ -7,8 +7,11 @@ import com.lence.penguinsvskillerwhales.model.Organism;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Set;
 
 public class Presenter {
     private int mRows;
@@ -32,28 +35,25 @@ public class Presenter {
 
             mLists.add(false);
         }
-        for (int i = 0; i < (mRows * mColumns) / 2; i++) {
-            int nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-            while (!(mLists.get(nextPosition) instanceof Boolean)) {
-                nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-            }
-            mLists.set(nextPosition, new Penguin());
-        }
-        //if table is small then add 1 orcas
+        Set<Integer> generated = new HashSet<>();
+        int generatedCount = (mRows * mColumns) / 2;
         if (mRows * mColumns / 20 > 0) {
-            for (int i = 0; i < (mRows * mColumns) / 20; i++) {
-                int nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-                while (!(mLists.get(nextPosition) instanceof Boolean)) {
-                    nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-                }
-                mLists.set(nextPosition, new Orca());
-            }
+            generatedCount += mRows * mColumns / 20;
         } else {
-            int nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-            while (!(mLists.get(nextPosition) instanceof Boolean)) {
-                nextPosition = mRandom.nextInt((mRows * mColumns) - 1);
-            }
-            mLists.set(nextPosition, new Orca());
+            //if table is small then add 1 orcas
+            generatedCount += 1;
+        }
+        while (generated.size() < generatedCount) {
+            generated.add(mRandom.nextInt((mRows * mColumns) - 1));
+        }
+        Iterator<Integer> iterator = generated.iterator();
+        int generatedIndex = 0;
+        for (; generatedIndex < (mRows * mColumns) / 2; generatedIndex++) {
+
+            mLists.set(iterator.next(), new Penguin());
+        }
+        for (; generatedIndex < generatedCount; generatedIndex++) {
+            mLists.set(iterator.next(), new Orca());
         }
 
         mUpdateAdapter.updateAdapter(mLists);

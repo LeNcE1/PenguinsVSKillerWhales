@@ -27,7 +27,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private Context mContext;
     private int mRows;
     private int mColumns;
-    int height;
 
     Adapter(LinkedList<Object> lists, Context context, int rows, int columns) {
         mLists = lists;
@@ -41,7 +40,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-        android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, parent.getMeasuredHeight() / mRows);
+        android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,(parent.getMeasuredHeight() / mRows)+1);
         itemView.setLayoutParams(layoutParams);
         return new ViewHolder(itemView);
     }
