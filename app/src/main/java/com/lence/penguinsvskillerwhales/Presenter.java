@@ -7,13 +7,10 @@ import com.lence.penguinsvskillerwhales.model.Organism;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Set;
 
-public class Presenter {
+public class Presenter implements UpdatePresenter {
     private int mRows;
     private int mColumns;
     private UpdateAdapter mUpdateAdapter;
@@ -30,40 +27,7 @@ public class Presenter {
 
     //initial condition - 50% of penguins, 5% of orcas
     void primaryState() {
-        mLists = new LinkedList<>();
-        if (mRows * mColumns <= 1) {
-            mLists.add(new Penguin());
-        } else if (mRows * mColumns == 2) {
-            mLists.add(new Penguin());
-            mLists.add(new Orca());
-        } else {
-            for (int i = 0; i < mRows * mColumns; i++) {
-
-                mLists.add(false);
-            }
-            Set<Integer> generated = new HashSet<>();
-            int generatedCount = (mRows * mColumns) / 2;
-            if (mRows * mColumns / 20 > 0) {
-                generatedCount += mRows * mColumns / 20;
-            } else {
-                //if table is small then add 1 orcas
-                generatedCount += 1;
-            }
-            while (generated.size() < generatedCount) {
-                generated.add(mRandom.nextInt((mRows * mColumns) - 1));
-            }
-            Iterator<Integer> iterator = generated.iterator();
-            int generatedIndex = 0;
-            for (; generatedIndex < (mRows * mColumns) / 2; generatedIndex++) {
-
-                mLists.set(iterator.next(), new Penguin());
-            }
-            for (; generatedIndex < generatedCount; generatedIndex++) {
-                mLists.set(iterator.next(), new Orca());
-            }
-        }
-        Log.e("listSize", mLists.size() + "");
-        mUpdateAdapter.updateAdapter(mLists);
+        new PrimaryState(mRows, mColumns, this).execute();
     }
 
 
@@ -92,12 +56,7 @@ public class Presenter {
                                 if (orca.getAge() == 7) {
                                     breeding(position, new Orca());
                                 }
-                                if (eat(position)) {
-                                    orca.eat();
-                                } else {
-                                    move(position);
-                                    orca.addHunger();
-                                }
+                                eat(position);
                                 orca.addAge();
                                 orca.setMoved(true);
                             } else {
@@ -134,209 +93,21 @@ public class Presenter {
 
 
     private void move(int thisPosition) {
-        switch (mRandom.nextInt(7)) {
-            case 0: {
-                //left
-                if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Boolean)) {
-                    mLists.set(thisPosition - 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to left");
-                }
-                break;
-            }
-
-            case 1: {
-                //right
-                if (((thisPosition + 1) % mColumns != 0) && (mLists.get(thisPosition + 1) instanceof Boolean)) {
-                    mLists.set(thisPosition + 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to right");
-                }
-                break;
-            }
-            case 2: {
-                //up
-                //Log.e("up", "position "+thisPosition+" "+(thisPosition-mColumns)+" "+((thisPosition-mColumns)>0?"true":"false"));
-                if (((thisPosition - mColumns) >= 0) && (mLists.get(thisPosition - mColumns) instanceof Boolean)) {
-                    mLists.set(thisPosition - mColumns, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to up");
-                }
-
-                break;
-            }
-            case 3: {
-                //down
-                if (((thisPosition + mColumns) < mColumns * mRows) && (mLists.get(thisPosition + mColumns) instanceof Boolean)) {
-                    mLists.set(thisPosition + mColumns, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to down");
-                }
-                break;
-            }
-            case 4: {
-                //left up
-                if (((thisPosition - mColumns) - 1 >= 0) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition - mColumns) - 1) instanceof Boolean)) {
-                    mLists.set((thisPosition - mColumns) - 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to left up");
-                }
-                break;
-
-            }
-            case 5: {
-                //right up
-                if (((thisPosition - mColumns) + 1 >= 0) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition - mColumns) + 1) instanceof Boolean)) {
-                    mLists.set((thisPosition - mColumns) + 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to right up");
-                }
-                break;
-
-            }
-            case 6: {
-                //left down
-                if (((thisPosition + mColumns) - 1 < mColumns * mRows) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition + mColumns) - 1) instanceof Boolean)) {
-                    mLists.set((thisPosition + mColumns) - 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to left down");
-                }
-                break;
-
-            }
-            case 7: {
-                //right down
-                if (((thisPosition + mColumns) + 1 < mColumns * mRows) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition + mColumns) + 1) instanceof Boolean)) {
-                    mLists.set((thisPosition + mColumns) + 1, mLists.get(thisPosition));
-                    mLists.set(thisPosition, false);
-                    Log.e("move", "move " + thisPosition + " to right down");
-                }
-                break;
-
-            }
-            default:
-                break;
-        }
-
+        new Move(mRows, mColumns, this, mLists, thisPosition).execute();
     }
 
     private void breeding(int thisPosition, Organism organism) {
-        ArrayList<Integer> checkList = new ArrayList<>();
-        //free directions list
-        if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Boolean)) {
-            checkList.add(0);
-        }
-        if (((thisPosition + 1) % mColumns != 0) && (mLists.get(thisPosition + 1) instanceof Boolean)) {
-            checkList.add(1);
-        }
-        if (((thisPosition - mColumns) >= 0) && (mLists.get(thisPosition - mColumns) instanceof Boolean)) {
-            checkList.add(2);
-        }
-        if (((thisPosition + mColumns) < mColumns * mRows) && (mLists.get(thisPosition + mColumns) instanceof Boolean)) {
-            checkList.add(3);
-        }
-        if (((thisPosition - mColumns) - 1 >= 0) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition - mColumns) - 1) instanceof Boolean)) {
-            checkList.add(4);
-        }
-        if (((thisPosition - mColumns) + 1 >= 0) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition - mColumns) + 1) instanceof Boolean)) {
-            checkList.add(5);
-        }
-        if (((thisPosition + mColumns) - 1 < mColumns * mRows) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition + mColumns) - 1) instanceof Boolean)) {
-            checkList.add(6);
-        }
-        if (((thisPosition + mColumns) + 1 < mColumns * mRows) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition + mColumns) + 1) instanceof Boolean)) {
-            checkList.add(7);
-        }
-
-        if (checkList.size() > 0) {
-            int randomNumber;
-            if (checkList.size() == 1) {
-                randomNumber = 0;
-            } else {
-                randomNumber = mRandom.nextInt(checkList.size() - 1);
-            }
-            //creation of a new organism
-            switch (checkList.get(randomNumber)) {
-                case 0: {
-                    mLists.set(thisPosition - 1, organism);
-                    break;
-                }
-                case 1: {
-                    mLists.set(thisPosition + 1, organism);
-                    break;
-                }
-                case 2: {
-                    mLists.set(thisPosition - mColumns, organism);
-                    break;
-                }
-                case 3: {
-                    mLists.set(thisPosition + mColumns, organism);
-                    break;
-                }
-                case 4: {
-                    mLists.set((thisPosition - mColumns) - 1, organism);
-                    break;
-                }
-                case 5: {
-                    mLists.set((thisPosition - mColumns) + 1, organism);
-                    break;
-                }
-                case 6: {
-                    mLists.set((thisPosition + mColumns) - 1, organism);
-                    break;
-                }
-                case 7: {
-                    mLists.set((thisPosition + mColumns) + 1, organism);
-                    break;
-                }
-            }
-        }
+        new Breeding(mRows, mColumns, this, mLists, thisPosition, organism).execute();
     }
 
-    private boolean eat(int thisPosition) {
-        //verification of all directions
-        if ((thisPosition % mColumns != 0) && (mLists.get(thisPosition - 1) instanceof Penguin)) {
-            mLists.set(thisPosition - 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition + 1) % mColumns != 0) && (mLists.get(thisPosition + 1) instanceof Penguin)) {
-            mLists.set(thisPosition + 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition - mColumns) >= 0) && (mLists.get(thisPosition - mColumns) instanceof Penguin)) {
-            mLists.set(thisPosition - mColumns, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition + mColumns) < mColumns * mRows) && (mLists.get(thisPosition + mColumns) instanceof Penguin)) {
-            mLists.set(thisPosition + mColumns, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition - mColumns) - 1 >= 0) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition - mColumns) - 1) instanceof Penguin)) {
-            mLists.set((thisPosition - mColumns) - 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition - mColumns) + 1 >= 0) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition - mColumns) + 1) instanceof Penguin)) {
-            mLists.set((thisPosition - mColumns) + 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition + mColumns) - 1 < mColumns * mRows) && (thisPosition % mColumns != 0) && (mLists.get((thisPosition + mColumns) - 1) instanceof Penguin)) {
-            mLists.set((thisPosition + mColumns) - 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
-        if (((thisPosition + mColumns) + 1 < mColumns * mRows) && ((thisPosition + 1) % mColumns != 0) && (mLists.get((thisPosition + mColumns) + 1) instanceof Penguin)) {
-            mLists.set((thisPosition + mColumns) + 1, mLists.get(thisPosition));
-            mLists.set(thisPosition, false);
-            return true;
-        }
+    private void eat(int thisPosition) {
+        new Eat(mRows, mColumns, this, mLists, thisPosition).execute();
+    }
 
-        return false;
+    @Override
+    public void update(LinkedList<Object> list) {
+        mLists = list;
+        mUpdateAdapter.updateAdapter(list);
     }
 }
 
