@@ -2,6 +2,6 @@ package com.lence.penguinsvskillerwhales;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public interface UpdateAdapter {
-    void updateAdapter(CopyOnWriteArrayList<Object> lists);
+public interface UpdatePresenter {
+    void update(CopyOnWriteArrayList<Object> list);
 }

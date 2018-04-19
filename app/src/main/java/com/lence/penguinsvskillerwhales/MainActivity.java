@@ -8,12 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     int ROWS = 15;
@@ -50,16 +49,19 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     }
 
     @Override
-    public void updateAdapter(LinkedList<Object> lists) {
+    public void updateAdapter(CopyOnWriteArrayList<Object> lists) {
+
         mAdapter = new Adapter(lists, this, ROWS, COLUMNS);
         mTable.setAdapter(mAdapter);
         mTable.getAdapter().notifyDataSetChanged();
     }
 
+
     @OnClick(R.id.click)
     public void onViewClicked() {
         mPresenter.nextStep();
     }
+
 
     @Override
     protected void onStop() {
