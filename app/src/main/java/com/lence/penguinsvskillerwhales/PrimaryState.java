@@ -7,7 +7,6 @@ import com.lence.penguinsvskillerwhales.model.Penguin;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,7 +28,7 @@ public class PrimaryState extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        mLists = new CopyOnWriteArrayList<>(new LinkedList<>());
+        mLists = new CopyOnWriteArrayList<>();
         if (mRows * mColumns <= 1) {
             mLists.add(new Penguin());
         } else if (mRows * mColumns == 2) {
