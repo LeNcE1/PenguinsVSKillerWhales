@@ -1,10 +1,9 @@
 package com.lence.penguinsvskillerwhales;
 
 import android.content.Context;
-import android.graphics.Color;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.lence.penguinsvskillerwhales.model.Orca;
-import com.lence.penguinsvskillerwhales.model.Organism;
+
 import com.lence.penguinsvskillerwhales.model.Penguin;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;

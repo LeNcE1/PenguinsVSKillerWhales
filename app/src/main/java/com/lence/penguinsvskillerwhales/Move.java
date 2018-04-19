@@ -3,11 +3,8 @@ package com.lence.penguinsvskillerwhales;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.security.auth.callback.Callback;
 
 public class Move extends AsyncTask<Void, Void, Void> {
     private int mRows;
@@ -16,7 +13,7 @@ public class Move extends AsyncTask<Void, Void, Void> {
     private CopyOnWriteArrayList<Object> mLists;
     private int thisPosition;
 
-    public Move(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition) {
+    Move(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition) {
         mRows = rows;
         mColumns = columns;
         mUpdatePresenter = updatePresenter;

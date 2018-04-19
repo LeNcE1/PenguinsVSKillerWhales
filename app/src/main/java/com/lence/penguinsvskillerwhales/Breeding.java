@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.lence.penguinsvskillerwhales.model.Organism;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -15,9 +14,9 @@ public class Breeding extends AsyncTask<Void,Void,Void> {
     private UpdatePresenter mUpdatePresenter;
     private CopyOnWriteArrayList<Object> mLists;
     private int thisPosition;
-    Organism mOrganism;
+    private Organism mOrganism;
 
-    public Breeding(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition, Organism organism) {
+    Breeding(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition, Organism organism) {
         mRows = rows;
         mColumns = columns;
         mUpdatePresenter = updatePresenter;

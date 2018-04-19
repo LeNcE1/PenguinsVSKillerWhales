@@ -1,14 +1,9 @@
 package com.lence.penguinsvskillerwhales;
 
-import android.util.Log;
-
 import com.lence.penguinsvskillerwhales.model.Orca;
 import com.lence.penguinsvskillerwhales.model.Organism;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Presenter implements UpdatePresenter {
@@ -17,8 +12,6 @@ public class Presenter implements UpdatePresenter {
     private UpdateAdapter mUpdateAdapter;
 
     private CopyOnWriteArrayList<Object> mLists;
-
-    private Random mRandom = new Random();
 
     Presenter(int rows, int columns, UpdateAdapter updateAdapter) {
         mRows = rows;
@@ -31,7 +24,6 @@ public class Presenter implements UpdatePresenter {
         new PrimaryState(mRows, mColumns, this, mUpdateAdapter).execute();
 
     }
-
 
     public void nextStep() {
         if (mRows * mColumns > 1) {
@@ -75,25 +67,11 @@ public class Presenter implements UpdatePresenter {
                 if (!(mLists.get(position) instanceof Boolean)) {
                     Organism organism = (Organism) mLists.get(position);
                     organism.setMoved(false);
-//                    if (mLists.get(position) instanceof Penguin) {
-//                        Penguin penguin = (Penguin) mLists.get(position);
-//                        if (penguin.isMoved()) {
-//                            penguin.setMoved(false);
-//                        }
-//                    }
-//                    if (mLists.get(position) instanceof Orca) {
-//                        Orca orca = (Orca) mLists.get(position);
-//                        if (orca.isMoved()) {
-//                            orca.setMoved(false);
-//                        }
-//                    }
-
                 }
             }
             mUpdateAdapter.updateAdapter(mLists);
         }
     }
-
 
     private void move(int thisPosition) {
         new Move(mRows, mColumns, this, mLists, thisPosition).execute();
@@ -110,7 +88,6 @@ public class Presenter implements UpdatePresenter {
     @Override
     public void update(CopyOnWriteArrayList<Object> list) {
         mLists = list;
-        // mUpdateAdapter.updateAdapter(list);
     }
 }
 
