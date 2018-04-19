@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.lence.penguinsvskillerwhales.model.Orca;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
-import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Eat extends AsyncTask<Void, Void, Boolean> {
@@ -14,14 +13,14 @@ public class Eat extends AsyncTask<Void, Void, Boolean> {
     private UpdatePresenter mUpdatePresenter;
     private CopyOnWriteArrayList<Object> mLists;
     private int thisPosition;
-    private Orca orca;
-    Eat(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition) {
+    private Orca mOrca;
+    Eat(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition, Orca orca) {
         mRows = rows;
         mColumns = columns;
         mUpdatePresenter = updatePresenter;
         mLists = lists;
         this.thisPosition = thisPosition;
-        orca = ((Orca) mLists.get(thisPosition));
+        mOrca=orca;
     }
 
     @Override
@@ -74,10 +73,10 @@ public class Eat extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         if (aBoolean) {
-            orca.eat();
+            mOrca.eat();
             mUpdatePresenter.update(mLists);
         } else {
-            orca.addHunger();
+            mOrca.addHunger();
             new Move(mRows, mColumns, mUpdatePresenter, mLists, thisPosition).execute();
         }
     }

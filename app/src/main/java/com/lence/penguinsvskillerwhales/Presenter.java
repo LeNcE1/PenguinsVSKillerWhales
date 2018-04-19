@@ -58,7 +58,7 @@ public class Presenter implements UpdatePresenter {
                                 if (orca.getAge() == 7) {
                                     breeding(position, new Orca());
                                 }
-                                eat(position);
+                                eat(position, orca);
                                 orca.addAge();
                                 orca.setMoved(true);
                             } else {
@@ -103,8 +103,8 @@ public class Presenter implements UpdatePresenter {
         new Breeding(mRows, mColumns, this, mLists, thisPosition, organism).execute();
     }
 
-    private void eat(int thisPosition) {
-        new Eat(mRows, mColumns, this, mLists, thisPosition).execute();
+    private void eat(int thisPosition, Orca orca) {
+        new Eat(mRows, mColumns, this, mLists, thisPosition, orca).execute();
     }
 
     @Override
