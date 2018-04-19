@@ -18,17 +18,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-    private LinkedList<Object> mLists;
+    private CopyOnWriteArrayList<Object> mLists;
     private Context mContext;
     private int mRows;
     private int mColumns;
 
-    Adapter(LinkedList<Object> lists, Context context, int rows, int columns) {
+    Adapter(CopyOnWriteArrayList<Object> lists, Context context, int rows, int columns) {
         mLists = lists;
         mContext = context;
         mRows = rows;

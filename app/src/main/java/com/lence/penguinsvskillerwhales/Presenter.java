@@ -9,13 +9,14 @@ import com.lence.penguinsvskillerwhales.model.Penguin;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Presenter implements UpdatePresenter {
     private int mRows;
     private int mColumns;
     private UpdateAdapter mUpdateAdapter;
 
-    private LinkedList<Object> mLists;
+    private CopyOnWriteArrayList<Object> mLists;
 
     private Random mRandom = new Random();
 
@@ -27,7 +28,8 @@ public class Presenter implements UpdatePresenter {
 
     //initial condition - 50% of penguins, 5% of orcas
     void primaryState() {
-        new PrimaryState(mRows, mColumns, this).execute();
+        new PrimaryState(mRows, mColumns, this, mUpdateAdapter).execute();
+
     }
 
 
@@ -71,19 +73,20 @@ public class Presenter implements UpdatePresenter {
             //preparation for the next step
             for (int position = 0; position < mLists.size(); position++) {
                 if (!(mLists.get(position) instanceof Boolean)) {
-
-                    if (mLists.get(position) instanceof Penguin) {
-                        Penguin penguin = (Penguin) mLists.get(position);
-                        if (penguin.isMoved()) {
-                            penguin.setMoved(false);
-                        }
-                    }
-                    if (mLists.get(position) instanceof Orca) {
-                        Orca orca = (Orca) mLists.get(position);
-                        if (orca.isMoved()) {
-                            orca.setMoved(false);
-                        }
-                    }
+                    Organism organism = (Organism) mLists.get(position);
+                    organism.setMoved(false);
+//                    if (mLists.get(position) instanceof Penguin) {
+//                        Penguin penguin = (Penguin) mLists.get(position);
+//                        if (penguin.isMoved()) {
+//                            penguin.setMoved(false);
+//                        }
+//                    }
+//                    if (mLists.get(position) instanceof Orca) {
+//                        Orca orca = (Orca) mLists.get(position);
+//                        if (orca.isMoved()) {
+//                            orca.setMoved(false);
+//                        }
+//                    }
 
                 }
             }
@@ -105,9 +108,9 @@ public class Presenter implements UpdatePresenter {
     }
 
     @Override
-    public void update(LinkedList<Object> list) {
+    public void update(CopyOnWriteArrayList<Object> list) {
         mLists = list;
-        mUpdateAdapter.updateAdapter(list);
+        // mUpdateAdapter.updateAdapter(list);
     }
 }
 

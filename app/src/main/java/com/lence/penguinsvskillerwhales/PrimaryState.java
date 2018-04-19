@@ -10,23 +10,26 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PrimaryState extends AsyncTask<Void,Void,Void> {
+public class PrimaryState extends AsyncTask<Void, Void, Void> {
     private int mRows;
     private int mColumns;
     private UpdatePresenter mUpdatePresenter;
-    private LinkedList<Object> mLists;
+    private CopyOnWriteArrayList<Object> mLists;
+    private UpdateAdapter mUpdateAdapter;
 
-    public PrimaryState(int rows, int columns, UpdatePresenter updatePresenter) {
+    public PrimaryState(int rows, int columns, UpdatePresenter updatePresenter, UpdateAdapter updateAdapter) {
 
         mRows = rows;
         mColumns = columns;
         mUpdatePresenter = updatePresenter;
+        mUpdateAdapter = updateAdapter;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        mLists = new LinkedList<>();
+        mLists = new CopyOnWriteArrayList<>(new LinkedList<>());
         if (mRows * mColumns <= 1) {
             mLists.add(new Penguin());
         } else if (mRows * mColumns == 2) {
@@ -65,5 +68,6 @@ public class PrimaryState extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         mUpdatePresenter.update(mLists);
+        mUpdateAdapter.updateAdapter(mLists);
     }
 }

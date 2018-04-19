@@ -6,15 +6,16 @@ import com.lence.penguinsvskillerwhales.model.Orca;
 import com.lence.penguinsvskillerwhales.model.Penguin;
 
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Eat extends AsyncTask<Void, Void, Boolean> {
     private int mRows;
     private int mColumns;
     private UpdatePresenter mUpdatePresenter;
-    private LinkedList<Object> mLists;
+    private CopyOnWriteArrayList<Object> mLists;
     private int thisPosition;
     private Orca orca;
-    Eat(int rows, int columns, UpdatePresenter updatePresenter, LinkedList<Object> lists, int thisPosition) {
+    Eat(int rows, int columns, UpdatePresenter updatePresenter, CopyOnWriteArrayList<Object> lists, int thisPosition) {
         mRows = rows;
         mColumns = columns;
         mUpdatePresenter = updatePresenter;
@@ -77,7 +78,7 @@ public class Eat extends AsyncTask<Void, Void, Boolean> {
             mUpdatePresenter.update(mLists);
         } else {
             orca.addHunger();
-            new Move(mRows, mColumns, mUpdatePresenter, mLists, thisPosition);
+            new Move(mRows, mColumns, mUpdatePresenter, mLists, thisPosition).execute();
         }
     }
 }
