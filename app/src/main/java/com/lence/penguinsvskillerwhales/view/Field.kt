@@ -5,7 +5,7 @@ import com.lence.penguinsvskillerwhales.model.Organism
 import com.lence.penguinsvskillerwhales.utils.Constants
 import java.util.*
 
-class KotlinField(private val height: Int, private val width: Int ) {
+class Field(private val height: Int, private val width: Int ) {
     private var mLists: MutableList<Organism?> = Collections.synchronizedList(ArrayList(height * width))
     operator fun set(x: Int, y: Int, organism: Organism?) {
         mLists[y * width + x] = organism
