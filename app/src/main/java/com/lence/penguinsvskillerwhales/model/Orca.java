@@ -1,11 +1,23 @@
 package com.lence.penguinsvskillerwhales.model;
 
+import android.graphics.Point;
+
+import com.lence.penguinsvskillerwhales.view.UpdatePresenter;
+
 public class Orca implements Organism {
+    private final int lifeTime = 8;
+    private final int limitHunger = 3;
+
     private Boolean moved = false;
     private int hunger = 0;
     private int age = 0;
+    private UpdatePresenter updatePresenter;
 
-    public int getHunger() {
+    public Orca(UpdatePresenter updatePresenter) {
+        this.updatePresenter = updatePresenter;
+    }
+
+    private int getHunger() {
         return hunger;
     }
 
@@ -17,11 +29,27 @@ public class Orca implements Organism {
         hunger = 0;
     }
 
-    public void addAge() {
-        if (age < 8) {
+    private void addAge() {
+        if (age < lifeTime) {
             age++;
         } else {
             age = 1;
+        }
+    }
+
+    public void lifeCycle(Point point) {
+        if (!isMoved()) {
+            if (getHunger() < limitHunger-1) {
+                if (getAge() == lifeTime-1) {
+                    updatePresenter.breeding(point, new Orca(updatePresenter));
+                }
+                updatePresenter.eat(point, this);
+                addAge();
+                setMoved(true);
+            } else {
+                updatePresenter.death(point);
+
+            }
         }
     }
 

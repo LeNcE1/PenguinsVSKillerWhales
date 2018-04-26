@@ -1,5 +1,6 @@
-package com.lence.penguinsvskillerwhales;
+package com.lence.penguinsvskillerwhales.view;
 
+import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.lence.penguinsvskillerwhales.R;
+import com.lence.penguinsvskillerwhales.life.Presenter;
+import com.lence.penguinsvskillerwhales.model.Organism;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     FrameLayout mClick;
     Adapter mAdapter;
     Presenter mPresenter;
+    ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         ButterKnife.bind(this);
-
+//        loading = new ProgressDialog(this);
+//        loading.setIndeterminate(true);
+//        loading.setCancelable(false);
         mPresenter = new Presenter(ROWS, COLUMNS, this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, COLUMNS);
@@ -49,16 +57,24 @@ public class MainActivity extends AppCompatActivity implements UpdateAdapter {
     }
 
     @Override
-    public void updateAdapter(CopyOnWriteArrayList<Object> lists) {
+    public void updateAdapter(KotlinField field) {
+        //mTable.setAdapter(mAdapter);
+        mTable.getAdapter().notifyDataSetChanged();
+       // loading.dismiss();
+    }
 
-        mAdapter = new Adapter(lists, this, ROWS, COLUMNS);
+    @Override
+    public void createAdapter(KotlinField field) {
+        mAdapter = new Adapter(field, this, ROWS, COLUMNS);
         mTable.setAdapter(mAdapter);
+        mTable.setHasFixedSize(true);
         mTable.getAdapter().notifyDataSetChanged();
     }
 
 
     @OnClick(R.id.click)
     public void onViewClicked() {
+       // loading.show();
         mPresenter.nextStep();
     }
 

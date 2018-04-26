@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Морской мир</string>
+    <string name="restart">restart</string>
 </resources>
